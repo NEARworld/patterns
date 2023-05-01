@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getTotalShapeAmount } from "./methods";
 import "./App.css";
 
 type Shape = "rectangle" | "circle" | "triangle";
@@ -8,32 +9,18 @@ type ShapeOptions = {
   height: number;
   color: string;
 };
-
-const CONCATENATED_RGBA =
-  "rgba(" +
-  Math.random() * 255 +
-  "," +
-  Math.random() * 255 +
-  "," +
-  Math.random() * 255 +
-  "," +
-  1 +
-  ")";
-const TEMPLATE_LITERALS_RGBA = `rgba(${Math.random() * 255}, ${
-  Math.random() * 255
-}, ${Math.random() * 255}, 0.5})`;
+const TEMPLATE_LITERALS_RGBA = () =>
+  `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
+    Math.random() * 255
+  }, 0.5)`;
 
 function generatePattern(
   canvasCtx: CanvasRenderingContext2D,
   rowColumn: number,
   { shape, width, height, color }: ShapeOptions
 ) {
-  canvasCtx.clearRect(
-    0,
-    0,
-    document.body.clientWidth,
-    document.body.clientHeight
-  );
+  // clean the canvas when changing code.
+  canvasCtx.clearRect(0, 0, canvasCtx.canvas.width, canvasCtx.canvas.width);
   canvasCtx.fillStyle = color;
 
   for (let i = 0; i < rowColumn; i++) {
@@ -48,49 +35,62 @@ function generatePattern(
     }
   }
 
-  const CONCATENATED_RGBA =
-    "rgba(" +
-    Math.random() * 255 +
-    "," +
-    Math.random() * 255 +
-    "," +
-    Math.random() * 255 +
-    "," +
-    Math.random() +
-    ")";
-  // requestAnimationFrame(() => generatePattern(canvasCtx, 30, {shape: 'rectangle', width: 50, height: 50, color: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5})`}));
   requestAnimationFrame(() =>
-    generatePattern(canvasCtx, 30, {
-      shape: "rectangle",
-      width: 50,
-      height: 50,
-      color: CONCATENATED_RGBA,
+    generatePattern(canvasCtx, rowColumn, {
+      shape,
+      width,
+      height,
+      color: TEMPLATE_LITERALS_RGBA(),
     })
   );
 }
 
+export type CanvasSize = {
+  width: number;
+  height: number;
+};
+
+const SHAPE_WIDTH_HEIGHT = 100;
+
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const CANVAS_SIZE = {
+    width: document.body.clientWidth / 2,
+    height: document.body.clientWidth / 2,
+  };
+
   useEffect(() => {
     const canvasCtx = canvasRef.current?.getContext("2d");
     if (canvasCtx) {
       requestAnimationFrame(() =>
-        generatePattern(canvasCtx, 30, {
-          shape: "rectangle",
-          width: 50,
-          height: 50,
-          color: CONCATENATED_RGBA,
-        })
+        generatePattern(
+          canvasCtx,
+          getTotalShapeAmount(CANVAS_SIZE, SHAPE_WIDTH_HEIGHT, 10),
+          {
+            shape: "rectangle",
+            width: SHAPE_WIDTH_HEIGHT,
+            height: SHAPE_WIDTH_HEIGHT,
+            color: TEMPLATE_LITERALS_RGBA(),
+          }
+        )
       );
     }
   }, []);
+
   return (
-    <canvas
-      ref={canvasRef}
-      width={document.body.clientWidth}
-      height={document.body.clientHeight}
-    />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "100px",
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_SIZE.width}
+        height={CANVAS_SIZE.height}
+      />
+    </div>
   );
 }
-
 export default App;
