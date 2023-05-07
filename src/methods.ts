@@ -1,4 +1,4 @@
-import { type CanvasSize } from "./App";
+import { type CanvasSize } from "./patterns/squares/basic";
 
 export const getTotalShapeAmount = (
   canvasSize: CanvasSize,
