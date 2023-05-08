@@ -68,6 +68,26 @@ function drawPointsOnParabola(
   }
 }
 
+function animatePointsOnParabola(
+  ctx: CanvasRenderingContext2D,
+  originPoint: CoordinatesSize,
+  x: number
+) {
+  let point = { x: 0, y: 0 };
+  let p = DIRECTRIX;
+  point.x = originPoint.x + x;
+  point.y = originPoint.y - Math.sqrt(4 * p * x);
+  ctx.fillRect(point.x, point.y, 1, 1);
+
+  point.y = originPoint.y + Math.sqrt(4 * p * x);
+  ctx.fillRect(point.x, point.y, 1, 1);
+  x++;
+
+  if (x == ctx.canvas.width) x = 0;
+
+  requestAnimationFrame(() => animatePointsOnParabola(ctx, originPoint, x));
+}
+
 function Parabola() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const coordinatesSize = {
@@ -100,7 +120,9 @@ function Parabola() {
       // draw the focus point.
       point(originPoint.x + DIRECTRIX, originPoint.y);
       drawDirectrix(ctx);
-      drawPointsOnParabola(ctx, originPoint);
+      // drawPointsOnParabola(ctx, originPoint);
+      let x = 0;
+      requestAnimationFrame(() => animatePointsOnParabola(ctx, originPoint, x));
     }
   }, []);
 
