@@ -85,7 +85,6 @@ function Parabola() {
 
     if (ctx) {
       const point: Point<number> = (x, y) => {
-        console.log(x, y);
         ctx.fillRect(x - 2, y - 2, 4, 4);
       };
 
