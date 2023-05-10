@@ -1,50 +1,12 @@
 import { useEffect, useRef } from "react";
-
-type Point<T> = (x: T, y: T) => void;
-type CoordinatesSize = {
-  x: number;
-  y: number;
-};
+import {
+  type CoordinatesSize,
+  type Point,
+  drawAxis,
+  drawGrid,
+} from "../common/coordinates";
 
 const DIRECTRIX = 40;
-function drawAxis(
-  ctx: CanvasRenderingContext2D,
-  coordinatesSize: CoordinatesSize
-) {
-  // draw X axis
-  ctx.beginPath();
-  ctx.moveTo(0, coordinatesSize.y / 2);
-  ctx.lineTo(coordinatesSize.x, coordinatesSize.y / 2);
-  ctx.stroke();
-  // draw Y axis
-  ctx.beginPath();
-  ctx.moveTo(coordinatesSize.x / 2, 0);
-  ctx.lineTo(coordinatesSize.x / 2, coordinatesSize.y);
-  ctx.stroke();
-}
-function drawGrid(ctx: CanvasRenderingContext2D) {
-  // vertical grid
-  for (let i = 0; i < ctx.canvas.width / 2; i += 10) {
-    ctx.beginPath();
-    ctx.setLineDash([1, 1]);
-    ctx.moveTo(ctx.canvas.width / 2 - i, 0);
-    ctx.lineTo(ctx.canvas.width / 2 - i, ctx.canvas.height);
-    ctx.moveTo(ctx.canvas.width / 2 + i, 0);
-    ctx.lineTo(ctx.canvas.width / 2 + i, ctx.canvas.height);
-    ctx.stroke();
-  }
-  // horizontal grid
-  for (let i = 0; i < ctx.canvas.height / 2; i += 10) {
-    ctx.beginPath();
-    ctx.moveTo(0, ctx.canvas.height / 2 - i);
-    ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2 - i);
-    ctx.moveTo(0, ctx.canvas.height / 2 + i);
-    ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2 + i);
-    ctx.stroke();
-  }
-  // change line style to solid line
-  ctx.setLineDash([]);
-}
 
 function drawDirectrix(ctx: CanvasRenderingContext2D) {
   ctx.beginPath();
@@ -71,6 +33,7 @@ function drawPointsOnParabola(
 function animatePointsOnParabola(
   ctx: CanvasRenderingContext2D,
   originPoint: CoordinatesSize,
+  coordinatesSize: CoordinatesSize,
   x: number
 ) {
   let point = { x: 0, y: 0 };
@@ -84,8 +47,9 @@ function animatePointsOnParabola(
   x++;
 
   if (x == ctx.canvas.width) x = 0;
-
-  requestAnimationFrame(() => animatePointsOnParabola(ctx, originPoint, x));
+  requestAnimationFrame(() =>
+    animatePointsOnParabola(ctx, originPoint, coordinatesSize, x)
+  );
 }
 
 function Parabola() {
@@ -121,8 +85,12 @@ function Parabola() {
       point(originPoint.x + DIRECTRIX, originPoint.y);
       drawDirectrix(ctx);
       // drawPointsOnParabola(ctx, originPoint);
+
+      // animate the parabola graph
       let x = 0;
-      requestAnimationFrame(() => animatePointsOnParabola(ctx, originPoint, x));
+      requestAnimationFrame(() =>
+        animatePointsOnParabola(ctx, originPoint, coordinatesSize, x)
+      );
     }
   }, []);
 
