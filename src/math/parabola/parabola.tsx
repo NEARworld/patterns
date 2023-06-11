@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   type CoordinatesSize,
   type Point,
@@ -46,7 +46,8 @@ function animatePointsOnParabola(
   ctx.fillRect(point.x, point.y, 1, 1);
   x++;
 
-  if (x == ctx.canvas.width) x = 0;
+  if (x === ctx.canvas.width) x = 0;
+
   requestAnimationFrame(() =>
     animatePointsOnParabola(ctx, originPoint, coordinatesSize, x)
   );
@@ -54,20 +55,40 @@ function animatePointsOnParabola(
 
 function Parabola() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const coordinatesSize = {
-    x: document.body.clientWidth,
-    y: document.body.clientHeight,
-  };
+  const [coordinatesSize, setCoordniateSize] = useState({
+    x: window.innerWidth,
+    y: window.innerHeight,
+  });
+
+  // const coordinatesSize = {
+  //   x: window.innerWidth,
+  //   y: window.innerHeight,
+  // };
   const originPoint = {
     x: coordinatesSize.x / 2,
     y: coordinatesSize.y / 2,
   };
 
+  // useEffect(() => {
+  //   const updateCoordinatesSize = () => {
+  //     setCoordniateSize({
+  //       x: window.innerWidth,
+  //       y: window.innerHeight,
+  //     });
+  //   };
+  //   window.addEventListener("resize", updateCoordinatesSize);
+
+  //   return () => {
+  //     window.removeEventListener("resize", updateCoordinatesSize);
+  //   };
+  // }, [coordinatesSize]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
 
-    if (ctx) {
+    if (canvas && ctx) {
+      // ctx.clearRect(0, 0, canvas.width, canvas.height);
       const point: Point<number> = (x, y) => {
         ctx.fillRect(x - 2, y - 2, 4, 4);
       };
@@ -88,18 +109,25 @@ function Parabola() {
 
       // animate the parabola graph
       let x = 0;
-      requestAnimationFrame(() =>
-        animatePointsOnParabola(ctx, originPoint, coordinatesSize, x)
-      );
+
+      animatePointsOnParabola(ctx, originPoint, coordinatesSize, x);
     }
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={coordinatesSize.x}
-      height={coordinatesSize.y}
-    ></canvas>
+    <>
+      <div style={{ textAlign: "center" }}>
+        <a href="https://github.com/NEARworld/patterns/blob/main/src/math/parabola/parabola.tsx">
+          github repo link
+        </a>
+      </div>
+      <canvas
+        id={"parabola"}
+        ref={canvasRef}
+        width={coordinatesSize.x}
+        height={coordinatesSize.y}
+      ></canvas>
+    </>
   );
 }
 

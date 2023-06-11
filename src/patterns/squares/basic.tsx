@@ -99,7 +99,19 @@ export default function SquaresBasicPattern() {
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Try resizing the window!</h1>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <h1>Try resizing the window!</h1>
+        <a href="https://github.com/NEARworld/patterns/blob/main/src/patterns/squares/basic.tsx">
+          Github repo link
+        </a>
+      </div>
       <div
         style={{
           display: "flex",
