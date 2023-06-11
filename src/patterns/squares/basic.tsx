@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getTotalShapeAmount } from "../../methods";
 
 type Shape = "rectangle" | "circle" | "triangle";
@@ -50,21 +50,34 @@ export type CanvasSize = {
 };
 
 const SHAPE_WIDTH_HEIGHT = 100;
+const GAP = 10;
 
 export default function SquaresBasicPattern() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const CANVAS_SIZE = {
+  const [canvasSizeState, setCanvasSizeState] = useState({
     width: document.body.clientWidth / 2,
     height: document.body.clientWidth / 2,
-  };
+  });
+  // const CANVAS_SIZE = {
+  //   width: document.body.clientWidth / 2,
+  //   height: document.body.clientWidth / 2,
+  // };
 
   useEffect(() => {
+    const adjustCanvasSize = () => {
+      setCanvasSizeState({
+        width: document.body.clientWidth / 2,
+        height: document.body.clientWidth / 2,
+      });
+    };
+    window.addEventListener("resize", adjustCanvasSize);
+
     const canvasCtx = canvasRef.current?.getContext("2d");
     if (canvasCtx) {
       requestAnimationFrame(() =>
         generatePattern(
           canvasCtx,
-          getTotalShapeAmount(CANVAS_SIZE, SHAPE_WIDTH_HEIGHT, 10),
+          getTotalShapeAmount(canvasSizeState, SHAPE_WIDTH_HEIGHT, GAP),
           {
             shape: "rectangle",
             width: SHAPE_WIDTH_HEIGHT,
@@ -74,20 +87,39 @@ export default function SquaresBasicPattern() {
         )
       );
     }
-  }, []);
+
+    return () => {
+      window.removeEventListener("resize", adjustCanvasSize);
+    };
+  }, [canvasSizeState]);
+
+  console.log(
+    (canvasSizeState.width % SHAPE_WIDTH_HEIGHT) / SHAPE_WIDTH_HEIGHT
+  );
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "100px",
-      }}
-    >
-      <canvas
-        ref={canvasRef}
-        width={CANVAS_SIZE.width}
-        height={CANVAS_SIZE.height}
-      />
-    </div>
+    <>
+      <h1 style={{ textAlign: "center" }}>Try resizing the window!</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "100px",
+          marginLeft:
+            canvasSizeState.width -
+            (getTotalShapeAmount(canvasSizeState, SHAPE_WIDTH_HEIGHT, GAP) *
+              SHAPE_WIDTH_HEIGHT +
+              (getTotalShapeAmount(canvasSizeState, SHAPE_WIDTH_HEIGHT, GAP) -
+                1) *
+                GAP),
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          width={canvasSizeState.width}
+          height={canvasSizeState.height}
+        />
+      </div>
+    </>
   );
 }

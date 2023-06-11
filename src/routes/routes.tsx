@@ -11,7 +11,7 @@ export const routes = createBrowserRouter([
     element: <Home />,
     children: [
       {
-        path: "patterns",
+        path: "blinking_squares",
         element: <SquaresBasic />,
       },
       {

@@ -1,5 +1,15 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useNavigation } from "react-router-dom";
 
 export default function Home() {
-  return <Outlet />;
+  const navigation = useNavigate();
+
+  return (
+    <div>
+      <button onClick={() => navigation("blinking_squares")}>
+        blinking squares
+      </button>
+      <button onClick={() => navigation("parabola")}>parabola</button>
+      <Outlet />
+    </div>
+  );
 }
