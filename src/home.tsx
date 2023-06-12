@@ -83,7 +83,13 @@ export default function Home() {
       {outlet ? (
         <Outlet />
       ) : (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <a href="https://github.com/NEARworld/patterns/blob/main/src/home.tsx">
             github repo link
           </a>
