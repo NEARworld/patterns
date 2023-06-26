@@ -78,6 +78,7 @@ export default function Home() {
           blinking squares
         </button>
         <button onClick={() => navigation("parabola")}>parabola</button>
+        <button onClick={() => navigation("circle")}>circle</button>
       </div>
 
       {outlet ? (
