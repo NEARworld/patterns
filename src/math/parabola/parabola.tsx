@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   type CoordinatesSize,
   type Point,
@@ -7,6 +7,15 @@ import {
 } from "../common/coordinates";
 
 const DIRECTRIX = 40;
+const coordinatesSize = {
+  x: window.innerWidth,
+  y: window.innerHeight,
+};
+
+const originPoint = {
+  x: coordinatesSize.x / 2,
+  y: coordinatesSize.y / 2,
+};
 
 function drawDirectrix(ctx: CanvasRenderingContext2D) {
   ctx.beginPath();
@@ -55,35 +64,9 @@ function animatePointsOnParabola(
 
 function Parabola() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [coordinatesSize, setCoordniateSize] = useState({
-    x: window.innerWidth,
-    y: window.innerHeight,
-  });
-
-  // const coordinatesSize = {
-  //   x: window.innerWidth,
-  //   y: window.innerHeight,
-  // };
-  const originPoint = {
-    x: coordinatesSize.x / 2,
-    y: coordinatesSize.y / 2,
-  };
-
-  // useEffect(() => {
-  //   const updateCoordinatesSize = () => {
-  //     setCoordniateSize({
-  //       x: window.innerWidth,
-  //       y: window.innerHeight,
-  //     });
-  //   };
-  //   window.addEventListener("resize", updateCoordinatesSize);
-
-  //   return () => {
-  //     window.removeEventListener("resize", updateCoordinatesSize);
-  //   };
-  // }, [coordinatesSize]);
 
   useEffect(() => {
+    console.log("para");
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
 
@@ -122,7 +105,6 @@ function Parabola() {
         </a>
       </div>
       <canvas
-        id={"parabola"}
         ref={canvasRef}
         width={coordinatesSize.x}
         height={coordinatesSize.y}
